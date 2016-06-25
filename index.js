@@ -5,17 +5,21 @@ var util = require('util');
 
 function TypeSwitch(opts) {
 	opts = opts || {};
-
 	EventEmitter.call(this);
+	var timer = null;
 
 	this.string = '';
-	this.timer = null;
 	this.gameClock = 0;
 	this.incorrect = 0;
 	this.position = 0;
-	this.currentGameStats = {};
+	this.currentGameStats = {
+		time: 0,
+		incorrectTotal: this.incorrect,
+		position: this.position,
+		answer: ''
+	};
 
-	function createGameStats(answer) {
+	function setGameStats(answer) {
 		var gameStats = {
 			time: this.gameClock,
 			incorrectTotal: this.incorrect,
@@ -29,18 +33,30 @@ function TypeSwitch(opts) {
 		var correctCharCode = this.string.charCodeAt(this.position);
 		if (pressedKey === correctCharCode) {
 			this.emit('correct');
-			this.currentGameStats = createGameStats('correct');
+			this.currentGameStats = setGameStats('correct');
 			this.position++;
 		} else {
 			this.emit('incorrect');
 			this.incorrect++;
-			this.currentGameStats = createGameStats('incorrect');
+			this.currentGameStats = setGameStats('incorrect');
 		}
 	}
 
 	this.handleKeyPress = function (e) {
 		var pressedCharCode = (typeof e.which === 'number') ? e.which : e.keyCode;
 		compareValues(pressedCharCode);
+	};
+
+	this.timerSwitch = function (click) {
+		if (click === 'on') {
+			timer = setInterval(function () {
+				this.gameClock++;
+				this.currentGameStats = setGameStats(this.currentGameStats.answer);
+			}, 1000);
+		} else {
+			clearInterval(timer);
+			this.currentGameStats = setGameStats('');
+		}
 	};
 }
 
@@ -50,9 +66,7 @@ TypeSwitch.prototype.start = function (str) {
 	this.addListener('keypress', this.handleKeyPress);
 	this.string = str;
 
-	this.timer = setInterval(() => {
-		this.gameClock++;
-	}, 1000);
+	this.timerSwitch('on');
 };
 
 TypeSwitch.prototype.getGameStats = function () {
@@ -72,13 +86,11 @@ TypeSwitch.prototype.changePrompt = function (newString) {
 };
 
 TypeSwitch.prototype.pauseGameClock = function () {
-	clearInterval(this.timer);
+	this.timerSwitch('off');
 };
 
 TypeSwitch.prototype.resumeGameClock = function () {
-	this.timer = setInterval(() => {
-		this.gameClock++;
-	}, 1000);
+	this.timerSwitch('on');
 };
 
 TypeSwitch.prototype.pauseGame = function () {

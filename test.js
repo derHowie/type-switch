@@ -4,7 +4,6 @@ import Obj from './';
 test('replaced default string value at start()', t => {
 	var Game = new Obj();
 	Game.start('bob is lame');
-	Game.changePrompt('fuck');
 
-	t.is(Game.string, 5);
+	t.is(Game.currentGameStats, 'bob is lame');
 });
