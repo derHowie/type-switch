@@ -1,0 +1,31 @@
+{
+  "name": "typing-game-logic",
+  "version": "0.0.0",
+  "description": "My tiptop module",
+  "license": "MIT",
+  "repository": "DerHowie/typing-game-logic",
+  "author": {
+    "name": "Christopher Howard",
+    "email": "derhowiedesigns@gmail.com",
+    "url": "n/a"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "xo && ava"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    ""
+  ],
+  "dependencies": {
+    "object-assign": "^4.1.0"
+  },
+  "devDependencies": {
+    "ava": "^0.11.0",
+    "xo": "^0.12.1"
+  }
+}
