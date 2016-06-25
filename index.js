@@ -6,39 +6,47 @@ var util = require('util');
 function TypeSwitch(opts) {
 	opts = opts || {};
 	EventEmitter.call(this);
-	var timer = null;
 
-	this.string = '';
-	this.gameClock = 0;
-	this.incorrect = 0;
-	this.position = 0;
-	this.currentGameStats = {
+	var timer = null;
+	var prompt = '';
+	var gameClock = 0;
+	var incorrect = 0;
+	var position = 0;
+	var currentGameStats = {
+		prompt: '',
 		time: 0,
-		incorrectTotal: this.incorrect,
-		position: this.position,
-		answer: ''
+		position: 0,
+		correctInput: '',
+		lastUserInput: '',
+		result: '',
+		incorrectTotal: 0,
 	};
 
-	function setGameStats(answer) {
+	function setGameStats(answer, correctKey, pressedKeyChar) {
 		var gameStats = {
-			time: this.gameClock,
-			incorrectTotal: this.incorrect,
-			position: this.position,
-			answer: answer
+			prompt: prompt,
+			time: gameClock,
+			position: position,
+			correctInput: correctKey,
+			lastUserInput: pressedKeyChar,
+			result: answer,
+			incorrectTotal: incorrect,
 		};
 		return gameStats;
 	}
 
 	function compareValues(pressedKey) {
-		var correctCharCode = this.string.charCodeAt(this.position);
+		var pressedKeyChar = String.fromCharCode(pressedKey);
+		var correctChar = prompt.charAt(position);
+		var correctCharCode = correctChar.charCodeAt(0);
 		if (pressedKey === correctCharCode) {
 			this.emit('correct');
-			this.currentGameStats = setGameStats('correct');
-			this.position++;
+			currentGameStats = setGameStats('correct', correctChar, pressedKeyChar);
+			position++;
 		} else {
 			this.emit('incorrect');
-			this.incorrect++;
-			this.currentGameStats = setGameStats('incorrect');
+			incorrect++;
+			currentGameStats = setGameStats('incorrect', correctChar, pressedKeyChar);
 		}
 	}
 
@@ -50,13 +58,26 @@ function TypeSwitch(opts) {
 	this.timerSwitch = function (click) {
 		if (click === 'on') {
 			timer = setInterval(function () {
-				this.gameClock++;
-				this.currentGameStats = setGameStats(this.currentGameStats.answer);
+				gameClock++;
+				currentGameStats = setGameStats('game-start', 'game-start', 'game-start');
 			}, 1000);
 		} else {
 			clearInterval(timer);
-			this.currentGameStats = setGameStats('');
+			currentGameStats = setGameStats('game-paused', 'game-paused', 'game-paused');
 		}
+	};
+
+	this.replacePrompt = function (string) {
+		prompt = string;
+	};
+
+	this.replaceGameStat = function (stat, index) {
+		currentGameStats[index] = stat;
+	};
+
+	this.returnGameStats = function () {
+		currentGameStats = setGameStats(currentGameStats.answer, currentGameStats.correctInput, currentGameStats.lastUserInput);
+		return currentGameStats;
 	};
 }
 
@@ -64,25 +85,24 @@ util.inherits(TypeSwitch, EventEmitter);
 
 TypeSwitch.prototype.start = function (str) {
 	this.addListener('keypress', this.handleKeyPress);
-	this.string = str;
-
+	this.replacePrompt(str);
 	this.timerSwitch('on');
 };
 
 TypeSwitch.prototype.getGameStats = function () {
-	return this.currentGameStats;
+	return this.returnGameStats();
 };
 
 TypeSwitch.prototype.changePosition = function (num) {
-	this.position += num;
+	this.replaceGameStat(num, 2);
 };
 
 TypeSwitch.prototype.changeTime = function (newTime) {
-	this.gameClock = newTime;
+	this.replaceGameStat(newTime, 1);
 };
 
-TypeSwitch.prototype.changePrompt = function (newString) {
-	this.string = newString;
+TypeSwitch.prototype.changePrompt = function (newPrompt) {
+	this.replacePrompt(newPrompt);
 };
 
 TypeSwitch.prototype.pauseGameClock = function () {
