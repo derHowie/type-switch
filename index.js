@@ -19,7 +19,7 @@ function TypeSwitch(opts) {
 		correctInput: '',
 		lastUserInput: '',
 		result: '',
-		incorrectTotal: 0,
+		incorrectTotal: 0
 	};
 
 	function setGameStats(answer, correctKey, pressedKeyChar) {
@@ -30,7 +30,7 @@ function TypeSwitch(opts) {
 			correctInput: correctKey,
 			lastUserInput: pressedKeyChar,
 			result: answer,
-			incorrectTotal: incorrect,
+			incorrectTotal: incorrect
 		};
 		return gameStats;
 	}
@@ -59,7 +59,7 @@ function TypeSwitch(opts) {
 		if (click === 'on') {
 			timer = setInterval(function () {
 				gameClock++;
-				currentGameStats = setGameStats('game-start', 'game-start', 'game-start');
+				currentGameStats = setGameStats('game-start', prompt.charAt(0), 'game-start');
 			}, 1000);
 		} else {
 			clearInterval(timer);
@@ -72,7 +72,11 @@ function TypeSwitch(opts) {
 	};
 
 	this.replaceGameStat = function (stat, index) {
-		currentGameStats[index] = stat;
+		if (index === 'position') {
+			position = stat;
+		} else {
+			gameClock = stat;
+		}
 	};
 
 	this.returnGameStats = function () {
@@ -94,11 +98,11 @@ TypeSwitch.prototype.getGameStats = function () {
 };
 
 TypeSwitch.prototype.changePosition = function (num) {
-	this.replaceGameStat(num, 2);
+	this.replaceGameStat(num, 'position');
 };
 
 TypeSwitch.prototype.changeTime = function (newTime) {
-	this.replaceGameStat(newTime, 1);
+	this.replaceGameStat(newTime, 'time');
 };
 
 TypeSwitch.prototype.changePrompt = function (newPrompt) {
