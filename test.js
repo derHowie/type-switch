@@ -24,30 +24,35 @@ test('replaces position', t => {
 	t.is(gameStats.position, 10);
 });
 
-test('the timer ticks', t => {
+test.cb('the timer ticks', t => {
 	var TypeSwitch = new Obj();
 	var gameStats = null;
+	TypeSwitch.start('Guy McGuyField');
 	setTimeout(function () {
 		gameStats = TypeSwitch.getGameStats();
 		t.is(gameStats.time, 10);
+		t.end();
 	}, 10000);
 });
 
-test('pauseGameClock() functions correctly', t => {
+test.cb('pauseGameClock() functions correctly', t => {
 	var TypeSwitch = new Obj();
 	var gameStats = null;
+	TypeSwitch.start('Guy McGuyField');
 	setTimeout(function () {
 		TypeSwitch.pauseGameClock();
 		setTimeout(function () {
 			gameStats = TypeSwitch.getGameStats();
 			t.is(gameStats.time, 10);
+			t.end();
 		}, 5000);
 	}, 10000);
 });
 
-test('resumeGameClock() functions correctly', t => {
+test.cb('resumeGameClock() functions correctly', t => {
 	var TypeSwitch = new Obj();
 	var gameStats = null;
+	TypeSwitch.start('Guy McGuyField');
 	setTimeout(function () {
 		TypeSwitch.pauseGameClock();
 		setTimeout(function () {
@@ -55,6 +60,7 @@ test('resumeGameClock() functions correctly', t => {
 			setTimeout(function () {
 				gameStats = TypeSwitch.getGameStats();
 				t.is(gameStats.time, 17);
+				t.end();
 			}, 7000);
 		}, 5000);
 	}, 10000);

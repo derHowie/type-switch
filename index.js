@@ -58,6 +58,7 @@ function TypeSwitch(opts) {
 	this.timerSwitch = function (click) {
 		if (click === 'on') {
 			currentGameStats = setGameStats('game-start', prompt.charAt(position), 'game-start');
+			gameClock++;
 			timer = setInterval(function () {
 				gameClock++;
 			}, 1000);
