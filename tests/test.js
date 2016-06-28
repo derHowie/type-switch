@@ -1,5 +1,5 @@
 import test from 'ava';
-import Obj from './';
+import Obj from '../lib/index.js';
 
 test('replaced default prompt value at start() / getGameStats() returns object', t => {
 	var TypeSwitch = new Obj();

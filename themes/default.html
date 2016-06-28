@@ -13,6 +13,9 @@
     <div><p id="incorrect">Incorrect: 0</p></div>
     <div><p id="prompt"></p></div>
     <div><input type="text"></input></div>
+    <div><p id="correctAnswer">Correct Answer:</p></div>
+    <div><p id="lastUserInput">Last User Input:</p></div>
+    <div><p id="result">Result:</p></div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="../build/type-switch.min.js"></script>
     <script>
@@ -22,6 +25,24 @@
       var gameClock = $('#gameClock');
       var position = $('#position');
       var incorrect = $('#incorrect');
+      var correctAnswer = $('#correctAnswer');
+      var lastUserInput = $('#lastUserInput');
+      var result = $('#result');
+
+      function updateInterface() {
+        var gameStats = Game.getGameStats();
+        console.log(gameStats);
+        var positionLabel = 'Position: ' + gameStats.position;
+        var incorrectLabel = 'Incorrect: ' + gameStats.incorrectTotal;
+        var corectAnswerLabel = 'Correct Answer: ' + gameStats.correctInput;
+        var lastUserInputLabel = 'Last User Input: ' + gameStats.lastUserInput;
+        var resultLabel = 'Result: ' + gameStats.result;
+        position.text(positionLabel);
+        incorrect.text(incorrectLabel);
+        correctAnswer.text(corectAnswerLabel);
+        lastUserInput.text(lastUserInputLabel);
+        result.text(resultLabel);
+      }
 
       Game.start('TypeSwitch');
       setInterval(function () {
@@ -31,18 +52,10 @@
       prompt.text(Game.getGameStats().prompt);
 
       Game.on('correct', function () {
-        var gameStats = Game.getGameStats();
-        var positionLabel = 'Position: ' + gameStats.position;
-        var incorrectLabel = 'Incorrect: ' + gameStats.incorrect;
-        position.text(positionLabel);
-        incorrect.text(incorrectLabel);
+        updateInterface();
       });
       Game.on('incorrect', function () {
-        var gameStats = Game.getGameStats();
-        var positionLabel = 'Position: ' + gameStats.position;
-        var incorrectLabel = 'Incorrect: ' + gameStats.incorrect;
-        position.text(positionLabel);
-        incorrect.text(incorrectLabel);
+        updateInterface();
       });
     });
     </script>
