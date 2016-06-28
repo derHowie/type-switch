@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "My tiptop module",
   "license": "MIT",
+  "main": "lib/index.js",
   "repository": "DerHowie/typing-game-logic",
   "author": {
     "name": "Christopher Howard",
@@ -13,16 +14,16 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "xo && ava"
+    "test": "xo && ava",
+    "build": "browserify lib/index.js -s TypeSwitch > build/type-switch.min.js -d"
   },
   "files": [
-    "index.js"
+    "build/type-switch.min.js"
   ],
   "keywords": [
     ""
   ],
   "dependencies": {
-    "object-assign": "^4.1.0"
   },
   "devDependencies": {
     "ava": "^0.11.0",

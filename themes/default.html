@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!--[if lte IE 6]><html class="preIE7 preIE8 preIE9"><![endif]-->
+<!--[if IE 7]><html class="preIE8 preIE9"><![endif]-->
+<!--[if IE 8]><html class="preIE9"><![endif]-->
+<!--[if gte IE 9]><!--><html><!--<![endif]-->
+  <head>
+    <meta charset="UTF-8">
+    <title>title</title>
+  </head>
+  <body>
+    <div><p id="gameClock">Game Clock: 0</p></div>
+    <div><p id="position">Position: 0</p></div>
+    <div><p id="incorrect">Incorrect: 0</p></div>
+    <div><p id="prompt"></p></div>
+    <div><input type="text"></input></div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="../build/type-switch.min.js"></script>
+    <script>
+    $(document).ready(function () {
+      var Game = new TypeSwitch();
+      var prompt = $('#prompt');
+      var gameClock = $('#gameClock');
+      var position = $('#position');
+      var incorrect = $('#incorrect');
+
+      Game.start('TypeSwitch');
+      setInterval(function () {
+        var gameClockLabel = 'Game Clock: ' + Game.getGameStats().time;
+        gameClock.text(gameClockLabel);
+      }, 1000);
+      prompt.text(Game.getGameStats().prompt);
+
+      Game.on('correct', function () {
+        var gameStats = Game.getGameStats();
+        var positionLabel = 'Position: ' + gameStats.position;
+        var incorrectLabel = 'Incorrect: ' + gameStats.incorrect;
+        position.text(positionLabel);
+        incorrect.text(incorrectLabel);
+      });
+      Game.on('incorrect', function () {
+        var gameStats = Game.getGameStats();
+        var positionLabel = 'Position: ' + gameStats.position;
+        var incorrectLabel = 'Incorrect: ' + gameStats.incorrect;
+        position.text(positionLabel);
+        incorrect.text(incorrectLabel);
+      });
+    });
+    </script>
+  </body>
+</html>

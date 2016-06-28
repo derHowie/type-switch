@@ -30,7 +30,7 @@ test.cb('the timer ticks', t => {
 	TypeSwitch.start('Guy McGuyField');
 	setTimeout(function () {
 		gameStats = TypeSwitch.getGameStats();
-		t.is(gameStats.time, 10);
+		t.is(gameStats.time, 9);
 		t.end();
 	}, 10000);
 });
@@ -43,7 +43,7 @@ test.cb('pauseGameClock() functions correctly', t => {
 		TypeSwitch.pauseGameClock();
 		setTimeout(function () {
 			gameStats = TypeSwitch.getGameStats();
-			t.is(gameStats.time, 10);
+			t.is(gameStats.time, 9);
 			t.end();
 		}, 5000);
 	}, 10000);
@@ -59,7 +59,7 @@ test.cb('resumeGameClock() functions correctly', t => {
 			TypeSwitch.resumeGameClock();
 			setTimeout(function () {
 				gameStats = TypeSwitch.getGameStats();
-				t.is(gameStats.time, 17);
+				t.is(gameStats.time, 15);
 				t.end();
 			}, 7000);
 		}, 5000);
