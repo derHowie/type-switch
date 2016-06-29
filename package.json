@@ -24,6 +24,7 @@
     ""
   ],
   "dependencies": {
+    "object-assign": "^4.1.0"
   },
   "devDependencies": {
     "ava": "^0.11.0",
