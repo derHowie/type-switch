@@ -15,7 +15,8 @@
   },
   "scripts": {
     "test": "xo && ava",
-    "build": "browserify lib/index.js -s TypeSwitch > build/type-switch.min.js -d"
+    "build": "browserify lib/index.js -s TypeSwitch > build/type-switch.min.js -d",
+    "compile-sass": "sass default.scss default.css"
   },
   "files": [
     "build/type-switch.min.js"

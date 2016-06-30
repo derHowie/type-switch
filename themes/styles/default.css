@@ -1,0 +1,12 @@
+.buttonText, .faded, .clickable {
+  font-size: 36px;
+  font-family: monospace; }
+
+.faded {
+  color: #8c8c8c; }
+
+.clickable {
+  color: black;
+  background-color: #FFFFFF; }
+
+/*# sourceMappingURL=default.css.map */

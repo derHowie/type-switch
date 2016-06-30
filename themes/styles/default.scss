@@ -1,0 +1,19 @@
+$gray: rgb(140, 140, 140);
+$black: rgb(0, 0, 0);
+$white: #FFFFFF;
+
+.buttonText {
+  font-size: 36px;
+  font-family: monospace;
+}
+
+.faded {
+  @extend .buttonText;
+  color: $gray;
+}
+
+.clickable {
+  @extend .buttonText;
+  color: $black;
+  background-color: $white;
+}

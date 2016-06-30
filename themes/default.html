@@ -5,52 +5,112 @@
 <!--[if gte IE 9]><!--><html><!--<![endif]-->
   <head>
     <meta charset="UTF-8">
-    <title>title</title>
+    <title>TypeSwitch</title>
+    <link href="styles/default.css" rel="stylesheet" type="text/css"></link>
   </head>
   <body>
     <div><p id="gameClock">Game Clock: 0</p></div>
-    <div><p id="position">Position: 0</p></div>
+    <div><p id="currentIndex">Current Index: 0</p></div>
     <div><p id="incorrect">Incorrect: 0</p></div>
     <div><p id="prompt"></p></div>
     <div><input type="text"></input></div>
-    <div><p id="correctAnswer">Correct Answer:</p></div>
+    <div><p id="expectedInput">Expected Input:</p></div>
     <div><p id="lastUserInput">Last User Input:</p></div>
     <div><p id="result">Result:</p></div>
+    <button id="pauseGame" class="faded">Pause</button>
+    <button id="resumeGame" class="faded">Resume</button>
+    <button id="startGame" class="clickable">Start</button>
+    <button id="resetGame" class="faded">Reset</button>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="../build/type-switch.min.js"></script>
     <script>
     $(document).ready(function () {
-      var Game = new TypeSwitch();
+      var Game = new TypeSwitch({stubbornMode: true});
       var prompt = $('#prompt');
       var gameClock = $('#gameClock');
-      var position = $('#position');
+      var currentIndex = $('#currentIndex');
       var incorrect = $('#incorrect');
-      var correctAnswer = $('#correctAnswer');
+      var expectedInput = $('#expectedInput');
       var lastUserInput = $('#lastUserInput');
       var result = $('#result');
+      var pauseGame = $('#pauseGame');
+      var resumeGame = $('#resumeGame');
+      var startGame = $('#startGame');
+      var resetGame = $('#resetGame');
+      var atStart = true;
 
       function updateInterface() {
         var gameStats = Game.getGameStats();
-        position.text('Position: ' + gameStats.position);
+        currentIndex.text('Current Index: ' + gameStats.currentIndex);
         incorrect.text('Incorrect: ' + gameStats.incorrectTotal);
-        correctAnswer.text('Correct Answer: ' + gameStats.correctInput);
+        expectedInput.text('Correct Answer: ' + gameStats.expectedInput);
         lastUserInput.text('Last User Input: ' + gameStats.lastUserInput);
         result.text('Result: ' + gameStats.result);
+        prompt.text(Game.getGameStats().prompt);
       }
-
-      Game.start('TypeSwitch');
-      updateInterface();
-      setInterval(function () {
+      function updateGameClock() {
         var gameClockLabel = 'Game Clock: ' + Game.getGameStats().time;
         gameClock.text(gameClockLabel);
+      };
+      function toggleButtonFade(button) {
+        if (button.hasClass('faded')) {
+          button.removeClass('faded').addClass('clickable');
+        } else {
+          button.removeClass('clickable').addClass('faded');
+        }
+      };
+
+      setInterval(function () {
+        updateGameClock();
       }, 1000);
-      prompt.text(Game.getGameStats().prompt);
 
       Game.on('correct', function () {
         updateInterface();
       });
       Game.on('incorrect', function () {
         updateInterface();
+      });
+      Game.on('complete', function () {
+        Game.restartGame();
+        updateGameClock();
+        updateInterface();
+      });
+
+      pauseGame.on('click', function () {
+        if (!atStart) {
+          Game.pauseGame();
+          toggleButtonFade($(this));
+          toggleButtonFade(resumeGame);
+        }
+      });
+      resumeGame.on('click', function () {
+        Game.resumeGame();
+        toggleButtonFade($(this));
+        toggleButtonFade(pauseGame);
+      });
+      startGame.on('click', function () {
+        if (atStart) {
+          atStart = false;
+          Game.start('TypeSwitch');
+          updateGameClock();
+          updateInterface();
+          toggleButtonFade($(this));
+          toggleButtonFade(resetGame);
+          toggleButtonFade(pauseGame);
+        }
+      });
+      resetGame.on('click', function () {
+        atStart = true;
+        if (Game.getGameStats().paused) {
+          toggleButtonFade(resumeGame);
+        } else {
+          toggleButtonFade(pauseGame);
+        }
+        Game.resetGame();
+        updateGameClock();
+        updateInterface();
+        toggleButtonFade($(this));
+        toggleButtonFade(startGame);
       });
     });
     </script>
