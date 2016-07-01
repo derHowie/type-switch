@@ -2,6 +2,11 @@ $gray: rgb(140, 140, 140);
 $black: rgb(0, 0, 0);
 $white: #FFFFFF;
 
+@keyframes Blink {
+  0% { opacity: 0 }
+  100% { opacity: 1 }
+}
+
 .buttonText {
   font-size: 36px;
   font-family: monospace;
@@ -16,4 +21,25 @@ $white: #FFFFFF;
   @extend .buttonText;
   color: $black;
   background-color: $white;
+}
+
+.letterContainer {
+  display: inline-block;
+  margin: 0;
+
+  p {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 28px;
+    text-align: center;
+    margin: 0;
+  }
+  .tracker {
+    position: relative;
+    top: -25px;
+    opacity: 0;
+  }
+}
+
+#activeLetter {
+  animation: Blink 1s ease-in 0s infinite;
 }

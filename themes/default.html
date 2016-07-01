@@ -7,18 +7,10 @@
     <meta charset="UTF-8">
     <title>TypeSwitch</title>
     <link href="styles/default.css" rel="stylesheet" type="text/css"></link>
+    <link href="https://fonts.googleapis.com/css?family=Cutive+Mono" rel="stylesheet">
   </head>
   <body>
-    <div><p id="gameClock">Game Clock: 0</p></div>
-    <div><p id="currentIndex">Current Index: 0</p></div>
-    <div><p id="incorrect">Incorrect: 0</p></div>
-    <div><p id="prompt"></p></div>
-    <div><input type="text"></input></div>
-    <div><p id="expectedInput">Expected Input:</p></div>
-    <div><p id="lastUserInput">Last User Input:</p></div>
-    <div><p id="result">Result:</p></div>
-    <button id="pauseGame" class="faded">Pause</button>
-    <button id="resumeGame" class="faded">Resume</button>
+    <div id="prompt"></div>
     <button id="startGame" class="clickable">Start</button>
     <button id="resetGame" class="faded">Reset</button>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
@@ -26,32 +18,33 @@
     <script>
     $(document).ready(function () {
       var Game = new TypeSwitch({stubbornMode: true});
-      var prompt = $('#prompt');
-      var gameClock = $('#gameClock');
-      var currentIndex = $('#currentIndex');
-      var incorrect = $('#incorrect');
-      var expectedInput = $('#expectedInput');
-      var lastUserInput = $('#lastUserInput');
-      var result = $('#result');
-      var pauseGame = $('#pauseGame');
-      var resumeGame = $('#resumeGame');
+
       var startGame = $('#startGame');
       var resetGame = $('#resetGame');
       var atStart = true;
 
-      function updateInterface() {
+      function displayPrompt(promptNum) {
+        $('#prompt').html('');
         var gameStats = Game.getGameStats();
-        currentIndex.text('Current Index: ' + gameStats.currentIndex);
-        incorrect.text('Incorrect: ' + gameStats.incorrectTotal);
-        expectedInput.text('Correct Answer: ' + gameStats.expectedInput);
-        lastUserInput.text('Last User Input: ' + gameStats.lastUserInput);
-        result.text('Result: ' + gameStats.result);
-        prompt.text(Game.getGameStats().prompt);
+        var prompt = gameStats.prompt;
+        var letterElements = prompt.split('').map(function (letter, i) {
+          var letterContainer = $('<div/>', {
+            class: 'letterContainer',
+            promptData: 'l' + i
+          });
+          var letterBlock = $('<p/>').text(letter);
+          var tracker = $('<p/>').text('_').addClass('tracker');
+          return letterContainer.append(letterBlock, tracker);
+        });
+        letterElements.forEach(function (letter) {
+          $('#prompt').append(letter);
+        });
       }
-      function updateGameClock() {
-        var gameClockLabel = 'Game Clock: ' + Game.getGameStats().time;
-        gameClock.text(gameClockLabel);
-      };
+
+      function incrementPosition() {
+
+      }
+
       function toggleButtonFade(button) {
         if (button.hasClass('faded')) {
           button.removeClass('faded').addClass('clickable');
@@ -60,57 +53,32 @@
         }
       };
 
-      setInterval(function () {
-        updateGameClock();
-      }, 1000);
-
       Game.on('correct', function () {
-        updateInterface();
+        console.log('correct');
       });
       Game.on('incorrect', function () {
-        updateInterface();
+        console.log('incorrect');
       });
       Game.on('complete', function () {
         Game.restartGame();
-        updateGameClock();
-        updateInterface();
-      });
-
-      pauseGame.on('click', function () {
-        if (!atStart) {
-          Game.pauseGame();
-          toggleButtonFade($(this));
-          toggleButtonFade(resumeGame);
-        }
-      });
-      resumeGame.on('click', function () {
-        Game.resumeGame();
-        toggleButtonFade($(this));
-        toggleButtonFade(pauseGame);
+        console.log('complete');
       });
       startGame.on('click', function () {
         if (atStart) {
           atStart = false;
-          Game.start('TypeSwitch');
-          updateGameClock();
-          updateInterface();
+          Game.start('This is what a sentence looks like This is what a sentence looks like This is what a sentence looks like');
+          displayPrompt(0);
           toggleButtonFade($(this));
           toggleButtonFade(resetGame);
-          toggleButtonFade(pauseGame);
         }
       });
       resetGame.on('click', function () {
-        atStart = true;
-        if (Game.getGameStats().paused) {
-          toggleButtonFade(resumeGame);
-        } else {
-          toggleButtonFade(pauseGame);
+        if (!atStart) {
+          atStart = true;
+          Game.resetGame();
+          toggleButtonFade($(this));
+          toggleButtonFade(startGame);
         }
-        Game.resetGame();
-        updateGameClock();
-        updateInterface();
-        toggleButtonFade($(this));
-        toggleButtonFade(startGame);
       });
     });
     </script>

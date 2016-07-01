@@ -1,3 +1,8 @@
+@keyframes Blink {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
 .buttonText, .faded, .clickable {
   font-size: 36px;
   font-family: monospace; }
@@ -8,5 +13,21 @@
 .clickable {
   color: black;
   background-color: #FFFFFF; }
+
+.letterContainer {
+  display: inline-block;
+  margin: 0; }
+  .letterContainer p {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 28px;
+    text-align: center;
+    margin: 0; }
+  .letterContainer .tracker {
+    position: relative;
+    top: -25px;
+    opacity: 0; }
+
+#activeLetter {
+  animation: Blink 1s ease-in 0s infinite; }
 
 /*# sourceMappingURL=default.css.map */
