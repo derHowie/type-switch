@@ -7,78 +7,101 @@
     <meta charset="UTF-8">
     <title>TypeSwitch</title>
     <link href="styles/default.css" rel="stylesheet" type="text/css"></link>
-    <link href="https://fonts.googleapis.com/css?family=Cutive+Mono" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Alegreya+Sans:800" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Changa:300" rel="stylesheet">
   </head>
   <body>
-    <div id="prompt"></div>
-    <button id="startGame" class="clickable">Start</button>
-    <button id="resetGame" class="faded">Reset</button>
+    <div id="header"><p id="title">TypeSwitch v1.0.0</p></div>
+    <div id="gameContainer">
+      <div id="prompt"></div>
+      <div id="underScore">_</div>
+    </div>
+    <div id="console">
+      <img id="playButton" src="resources/play.png" alt="play button"/>
+      <h2 id="timerTitle">Elapsed Time:</h2>
+      <h3 id="timer">0</h3>
+      <h2 id="WPMTitle">WPM</h2>
+      <h3 id="WPM">0</h3>
+    </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="../build/type-switch.min.js"></script>
     <script>
     $(document).ready(function () {
       var Game = new TypeSwitch({stubbornMode: true});
+      var elapsedTime = setInterval(function () {
+        $('#timer').text(Game.getGameStats().time);
+      }, 1000);
 
-      var startGame = $('#startGame');
-      var resetGame = $('#resetGame');
-      var atStart = true;
-
-      function displayPrompt(promptNum) {
-        $('#prompt').html('');
-        var gameStats = Game.getGameStats();
-        var prompt = gameStats.prompt;
-        var letterElements = prompt.split('').map(function (letter, i) {
-          var letterContainer = $('<div/>', {
-            class: 'letterContainer',
-            promptData: 'l' + i
-          });
-          var letterBlock = $('<p/>').text(letter);
-          var tracker = $('<p/>').text('_').addClass('tracker');
-          return letterContainer.append(letterBlock, tracker);
-        });
-        letterElements.forEach(function (letter) {
-          $('#prompt').append(letter);
+      function appendGamePrompt(newPrompt) {
+        newPrompt.split('').map(function (letter, i) {
+          var letterContainer = document.createElement('p');
+          letterContainer.setAttribute('class', 'letter');
+          var node = document.createTextNode(letter);
+          letterContainer.appendChild(node);
+          return letterContainer;
+        }).forEach(function (node) {
+          document.getElementById('prompt').appendChild(node);
         });
       }
 
-      function incrementPosition() {
-
-      }
-
-      function toggleButtonFade(button) {
-        if (button.hasClass('faded')) {
-          button.removeClass('faded').addClass('clickable');
-        } else {
-          button.removeClass('clickable').addClass('faded');
+      function setLetterColor() {
+        var letters = document.querySelectorAll('.letter');
+        for (var i = 0, length = letters.length; i < length; i++) {
+          var currentLetter = letters[i];
+          if (i < Game.getGameStats().currentIndex) {
+            currentLetter.setAttribute('class', 'letter done');
+          }
+          else if (i === Game.getGameStats().currentIndex) {
+            currentLetter.setAttribute('class', 'letter active');
+          } else {
+            currentLetter.setAttribute('class', 'letter queued');
+          }
         }
-      };
+      }
+
+      function loopFade(el){
+        el.style.opacity = .4;
+        (function fade() {
+          if ((el.style.opacity -= .04) < 0) {
+            el.style.opacity = .4;
+          } else {
+            requestAnimationFrame(fade);
+          }
+        })();
+      }
+
+      function shiftPrompt() {
+        var totalOffset = 0;
+        $('.done').each(function () {
+          totalOffset += $(this).width();
+        });
+        totalOffset += $('.active').width() / 2;
+        $('#prompt').css('transform', 'translateX(-' + totalOffset + 'px)');
+      }
+
+      $('#playButton').on('click', function () {
+          Game.start('TypeSwitch');
+          appendGamePrompt('TypeSwitch');
+          setLetterColor();
+          shiftPrompt();
+          $(this).css('opacity', .2);
+      });
 
       Game.on('correct', function () {
-        console.log('correct');
+        setLetterColor();
+        shiftPrompt();
+        loopFade(document.getElementById('underScore'));
+        console.log(Game.getGameStats());
       });
       Game.on('incorrect', function () {
-        console.log('incorrect');
+        // alertIncorrect();
       });
       Game.on('complete', function () {
-        Game.restartGame();
-        console.log('complete');
-      });
-      startGame.on('click', function () {
-        if (atStart) {
-          atStart = false;
-          Game.start('This is what a sentence looks like This is what a sentence looks like This is what a sentence looks like');
-          displayPrompt(0);
-          toggleButtonFade($(this));
-          toggleButtonFade(resetGame);
-        }
-      });
-      resetGame.on('click', function () {
-        if (!atStart) {
-          atStart = true;
-          Game.resetGame();
-          toggleButtonFade($(this));
-          toggleButtonFade(startGame);
-        }
+        Game.resetGame();
+        console.log('complete ', Game.getGameStats());
+        setLetterColor();
+        shiftPrompt();
+        $('#playButton').css('opacity', 1);
       });
     });
     </script>
