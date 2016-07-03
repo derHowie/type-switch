@@ -36,7 +36,7 @@ h2 {
   position: relative;
   overflow-x: hidden;
   overflow-y: hidden;
-  background-color: $gray;
+  z-index: -1;
 }
 
 #prompt {
@@ -116,4 +116,31 @@ h2 {
   margin-bottom: 0;
   right: 8px;
   top: 25px
+}
+
+#sheath {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-color: $gray;
+  z-index: -1;
+  opacity: 1;
+}
+
+#particles {
+  position: absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:-2;
+  opacity: .6;
+}
+
+canvas{
+  background-color: $gray;
+	display: block;
+	vertical-align: bottom;
 }

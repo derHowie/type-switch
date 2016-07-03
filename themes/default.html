@@ -11,6 +11,8 @@
     <link href="https://fonts.googleapis.com/css?family=Changa:300" rel="stylesheet">
   </head>
   <body>
+    <div id="sheath"></div>
+    <div id="particles"></div>
     <div id="header"><p id="title">TypeSwitch v1.0.0</p></div>
     <div id="gameContainer">
       <div id="prompt"></div>
@@ -25,16 +27,22 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="../build/type-switch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
     $(document).ready(function () {
       var Game = new TypeSwitch({stubbornMode: true});
       var elapsedTime = setInterval(function () {
         $('#timer').text(Game.getGameStats().time);
       }, 1000);
+      var prompt = 'Introducing TypeSwitch, a flexible keypress event module! Track input, accuracy, and duration out of the box! Focus on your UI, while TypeSwitch feeds you the good stuff!'
 
       function appendGamePrompt(newPrompt) {
         newPrompt.split('').map(function (letter, i) {
           var letterContainer = document.createElement('p');
+          if (letter === ' ') {
+            letter = 'W';
+            letterContainer.style.opacity = '0';
+          }
           letterContainer.setAttribute('class', 'letter');
           var node = document.createTextNode(letter);
           letterContainer.appendChild(node);
@@ -59,11 +67,34 @@
         }
       }
 
-      function loopFade(el){
-        el.style.opacity = .4;
+      function unsheathParticles(el, val) {
+        el.style.opacity = val;
         (function fade() {
-          if ((el.style.opacity -= .04) < 0) {
-            el.style.opacity = .4;
+          if ((el.style.opacity -= (val / 10)) < 0) {
+            el.style.opacity = 0;
+            sheathParticles(el, val);
+          } else {
+            requestAnimationFrame(fade);
+          }
+        })();
+      }
+
+      function sheathParticles(el, val) {
+        el.style.opacity = 0;
+        (function fade() {
+          if ((el.style.opacity += (val / 10)) > val) {
+            el.style.opacity = val;
+          } else {
+            requestAnimationFrame(fade);
+          }
+        })();
+      }
+
+      function loopFadeOut(el, val){
+        el.style.opacity = val;
+        (function fade() {
+          if ((el.style.opacity -= (val / 10)) < 0) {
+            el.style.opacity = val;
           } else {
             requestAnimationFrame(fade);
           }
@@ -73,25 +104,30 @@
       function shiftPrompt() {
         var totalOffset = 0;
         $('.done').each(function () {
-          totalOffset += $(this).width();
+          totalOffset += $(this).width() - 1;
         });
         totalOffset += $('.active').width() / 2;
         $('#prompt').css('transform', 'translateX(-' + totalOffset + 'px)');
       }
 
       $('#playButton').on('click', function () {
-          Game.start('TypeSwitch');
-          appendGamePrompt('TypeSwitch');
+          Game.start(prompt);
+          appendGamePrompt(prompt);
           setLetterColor();
           shiftPrompt();
           $(this).css('opacity', .2);
       });
 
       Game.on('correct', function () {
+        var gameStats = Game.getGameStats();
         setLetterColor();
         shiftPrompt();
-        loopFade(document.getElementById('underScore'));
-        console.log(Game.getGameStats());
+        loopFadeOut(document.getElementById('underScore'), .4);
+        if (gameStats.prompt[gameStats.currentIndex] === ' ') {
+          $('#sheath').fadeOut(0, function () {
+            $('#sheath').fadeIn(700);
+          });
+        }
       });
       Game.on('incorrect', function () {
         // alertIncorrect();
@@ -99,9 +135,87 @@
       Game.on('complete', function () {
         Game.resetGame();
         console.log('complete ', Game.getGameStats());
-        setLetterColor();
-        shiftPrompt();
+        $('#prompt').html('');
         $('#playButton').css('opacity', 1);
+      });
+
+      particlesJS("particles", {
+        "particles": {
+          "number": {
+            "value": 30,
+            "density": {
+              "enable": true,
+              "value_area": 800
+            }
+          },
+          "color": {
+            "value": '#1a1a1a'
+          },
+          "shape": {
+            "type": "circle",
+            "stroke": {
+              "width": 0,
+              "color": "#FFFFFF"
+            },
+            "polygon": {
+              "nb_sides": 5
+            },
+          },
+          "opacity": {
+            "value": .2,
+            "random": false,
+            "anim": {
+              "enable": false,
+              "speed": 1,
+              "opacity_min": 0.1,
+              "sync": false
+            }
+          },
+          "size": {
+            "value": 0,
+            "random": false,
+            "anim": {
+              "enable": false,
+              "speed": 40,
+              "size_min": 0.1,
+              "sync": false
+            }
+          },
+          "line_linked": {
+            "enable": true,
+            "distance": 550,
+            "color": "#00b386",
+            "opacity": .05,
+            "width": 500
+          },
+          "move": {
+            "enable": true,
+            "speed": 80,
+            "direction": "none",
+            "random": true,
+            "straight": false,
+            "out_mode": "out",
+            "bounce": false,
+            "attract": {
+              "enable": false,
+              "rotateX": 600,
+              "rotateY": 1200
+            }
+          }
+        },
+        "interactivity": {
+          "detect_on": "canvas",
+          "events": {
+            "onhover": {
+              "enable": false
+            },
+            "onclick": {
+              "enable": false
+            },
+            "resize": true
+          }
+        },
+        "retina_detect": true
       });
     });
     </script>
