@@ -1,45 +1,119 @@
-$gray: rgb(140, 140, 140);
-$black: rgb(0, 0, 0);
+$gray: #000000;
+$lighterGray: #1a1a1a;
+$lightestGray: #4d4d4d;
 $white: #FFFFFF;
+$seaFoam: #00b386;
 
 @keyframes Blink {
-  0% { opacity: 0 }
-  100% { opacity: 1 }
+  0% {opacity: .15}
+  50% {opacity: .6}
+  100% {opacity: 1}
 }
 
-.buttonText {
-  font-size: 36px;
-  font-family: monospace;
+body {
+  margin: 0;
+  background-color: $gray;
 }
 
-.faded {
-  @extend .buttonText;
-  color: $gray;
+h2 {
+  font-family: 'Changa', sans-serif;
 }
 
-.clickable {
-  @extend .buttonText;
-  color: $black;
+#header {
+  margin: 0;
   background-color: $white;
 }
 
-.letterContainer {
-  display: inline-block;
-  margin: 0;
-
-  p {
-    font-family: 'Cutive Mono', monospace;
-    font-size: 28px;
-    text-align: center;
-    margin: 0;
-  }
-  .tracker {
-    position: relative;
-    top: -25px;
-    opacity: 0;
-  }
+#title {
+  font-family: 'Changa', sans-serif;
+  font-size: 18px;
+  margin: 0 0 5px 8px;
 }
 
-#activeLetter {
-  animation: Blink 1s ease-in 0s infinite;
+#gameContainer {
+  height: 700px;
+  max-width: 100%;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  background-color: $gray;
+}
+
+#prompt {
+ position: absolute;
+ left: 50%;
+ top: 0;
+}
+
+.letter {
+  display: inline;
+  font-size: 550px;
+  font-family: 'Alegreya Sans', sans-serif;
+}
+
+#underScore {
+  font-size: 600px;
+  font-family: 'Alegreya Sans', sans-serif;
+  position: absolute;
+  right: 50%;
+  transform: translateX(50%);
+  color: $seaFoam;
+  opacity: .4;
+  bottom: -60px;
+}
+
+.done {
+  color: $lighterGray;
+}
+
+.active {
+  color: $white;
+}
+
+.queued {
+  color: $lightestGray;
+}
+
+#console {
+  background-color: $white;
+  width: 100%;
+  height: 60px;
+  position: absolute;
+  bottom: 0;
+}
+
+#playButton {
+  height: 40px;
+  margin: 0 auto;
+  display: block;
+  padding: 8px;
+}
+
+#timerTitle {
+  @extend #title;
+  position: absolute;
+  top: 0;
+}
+
+#timer {
+  @extend #title;
+  position: absolute;
+  margin-bottom: 0;
+  left: 8px;
+  top: 25px;
+}
+
+#WPMTitle {
+  @extend #title;
+  position: absolute;
+  top: 0;
+  right: 8px;
+}
+
+#WPM {
+  @extend #title;
+  position: absolute;
+  margin-bottom: 0;
+  right: 8px;
+  top: 25px
 }
