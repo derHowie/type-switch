@@ -4,10 +4,10 @@ $lightestGray: #4d4d4d;
 $white: #FFFFFF;
 $seaFoam: #00b386;
 
-@keyframes Blink {
-  0% {opacity: .15}
-  50% {opacity: .6}
-  100% {opacity: 1}
+@keyframes Pulse {
+  0% {opacity: .3}
+  50% {opacity: .5}
+  100% {opacity: .7}
 }
 
 body {
@@ -39,10 +39,29 @@ h2 {
   z-index: -1;
 }
 
+#message {
+  opacity: .6;
+  font-family: 'Changa', sans-serif;
+  color: $white;
+  width: 33%;
+  margin: 0 auto;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: $lighterGray;
+  text-align: center;
+  border: solid 5px $seaFoam;
+  animation: Pulse 1.5s linear infinite alternate;
+  p {
+    font-size: 20px;
+  }
+}
+
 #prompt {
  position: absolute;
  left: 50%;
  top: 0;
+ display: none;
 }
 
 .letter {
@@ -58,8 +77,8 @@ h2 {
   right: 50%;
   transform: translateX(50%);
   color: $seaFoam;
-  opacity: .4;
-  bottom: -60px;
+  opacity: .8;
+  bottom: -130px;
 }
 
 .done {
@@ -103,14 +122,14 @@ h2 {
   top: 25px;
 }
 
-#WPMTitle {
+#pointsTitle {
   @extend #title;
   position: absolute;
   top: 0;
   right: 8px;
 }
 
-#WPM {
+#points {
   @extend #title;
   position: absolute;
   margin-bottom: 0;
@@ -126,7 +145,7 @@ h2 {
   height: 100%;
   background-color: $gray;
   z-index: -1;
-  opacity: 1;
+  opacity: .4;
 }
 
 #particles {

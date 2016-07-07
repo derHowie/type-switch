@@ -1,10 +1,10 @@
-@keyframes Blink {
+@keyframes Pulse {
   0% {
-    opacity: .15; }
+    opacity: .3; }
   50% {
-    opacity: .6; }
+    opacity: .5; }
   100% {
-    opacity: 1; } }
+    opacity: .7; } }
 body {
   margin: 0;
   background-color: #000000; }
@@ -16,7 +16,7 @@ h2 {
   margin: 0;
   background-color: #FFFFFF; }
 
-#title, #timerTitle, #timer, #WPMTitle, #WPM {
+#title, #timerTitle, #timer, #pointsTitle, #points {
   font-family: 'Changa', sans-serif;
   font-size: 18px;
   margin: 0 0 5px 8px; }
@@ -29,10 +29,27 @@ h2 {
   overflow-y: hidden;
   z-index: -1; }
 
+#message {
+  opacity: .6;
+  font-family: 'Changa', sans-serif;
+  color: #FFFFFF;
+  width: 33%;
+  margin: 0 auto;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #1a1a1a;
+  text-align: center;
+  border: solid 5px #00b386;
+  animation: Pulse 1.5s linear infinite alternate; }
+  #message p {
+    font-size: 20px; }
+
 #prompt {
   position: absolute;
   left: 50%;
-  top: 0; }
+  top: 0;
+  display: none; }
 
 .letter {
   display: inline;
@@ -46,8 +63,8 @@ h2 {
   right: 50%;
   transform: translateX(50%);
   color: #00b386;
-  opacity: .4;
-  bottom: -60px; }
+  opacity: .8;
+  bottom: -130px; }
 
 .done {
   color: #1a1a1a; }
@@ -81,12 +98,12 @@ h2 {
   left: 8px;
   top: 25px; }
 
-#WPMTitle {
+#pointsTitle {
   position: absolute;
   top: 0;
   right: 8px; }
 
-#WPM {
+#points {
   position: absolute;
   margin-bottom: 0;
   right: 8px;
@@ -100,7 +117,7 @@ h2 {
   height: 100%;
   background-color: #000000;
   z-index: -1;
-  opacity: 1; }
+  opacity: .4; }
 
 #particles {
   position: absolute;
