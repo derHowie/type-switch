@@ -19,16 +19,19 @@
       <div id="underScore">_</div>
     </div>
     <div id="console">
-      <img id="playButton" src="resources/play.png" alt="play button"/>
+      <img id="playButton" src="resources/default/play.png" alt="play button"/>
       <h2 id="timerTitle">Elapsed Time:</h2>
       <h3 id="timer">00:00</h3>
       <h2 id="pointsTitle">Points</h2>
       <h3 id="points">0</h3>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-    <script src="../build/type-switch.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r77/three.min.js"></script>
-    <script src="https://cdn.rawgit.com/sole/tween.js/master/src/Tween.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="../build/type-switch.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r77/three.min.js" type="text/javascript"></script>
+    <script src="https://cdn.rawgit.com/sole/tween.js/master/src/Tween.js" type="text/javascript"></script>
+    <script src="resources/default/functions.js" type="text/javascript"></script>
     <script>
     $(document).ready(function () {
       var $gameContainer = $('#gameContainer');
@@ -37,157 +40,130 @@
       var $underScore = $('#underScore');
       var $timer = $('#timer');
       var $points = $('#points');
+      var $playButton = $('#playButton');
+      var incorrectTone = new functions.sound('resources/default/zap2.mp3');
+      var Game = new TypeSwitch({stubbornMode: true});
+      var elapsedTime = setInterval(function () {
+        functions.divideTime(Game.getGameStats().time, $timer);
+      }, 1000);
+      var prompt = 'TypeSwitch is a javascript keypress event module, that makes tracking keystrokes a breeze!'
 
-      var Particles = function () {
-        this.rendering = false;
+      function Particle(sprite, scene) {
+        this.init = function () {
+          sprite.position.set(0, 0, 0);
+          sprite.scale.x = sprite.scale.y = Math.random() * 32 + 60;
+          new TWEEN.Tween(sprite.position)
+            .to({
+              x: Math.random() * 8000 - 4000,
+              y: Math.random() * 8000 - 4000,
+              z: Math.random() * 8000 - 4000
+            }, 2750)
+            .start();
+          new TWEEN.Tween(sprite.scale)
+            .to({
+              x: 0.1,
+              y: 0.1
+            }, 2750)
+            .start();
+          scene.add(sprite);
+        };
+      }
+
+      function Burst(colorChoice, scene) {
+        function generateSprite() {
+          var canvas = document.createElement('canvas');
+          var colors = ['rgba(255, 71, 71,', 'rgba(0, 206, 237,', 'rgba(255, 255, 255,', 'rgba(255, 71, 71,', 'rgba(0, 206, 237,', 'rgba(255, 255, 255,'];
+          var color = colors[colorChoice];
+          canvas.width = 64;
+          canvas.height = 64;
+          var context = canvas.getContext('2d');
+          var gradient = context.createRadialGradient(canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width / 2);
+          gradient.addColorStop(0, color + ' 1)');
+          gradient.addColorStop(0.4, color + ' .6');
+          gradient.addColorStop(0.7, color + ' .3');
+          gradient.addColorStop(1, 'rgba(0,0,0,1');
+          context.fillStyle = gradient;
+          context.fillRect(0, 0, canvas.width, canvas.height);
+          return canvas;
+        }
+        var material = new THREE.SpriteMaterial({
+          map: new THREE.CanvasTexture(generateSprite()),
+          blending: THREE.AdditiveBlending
+        });
+        this.members = [];
+        for (var i = 0; i < 30; i++) {
+          this.members.push(new Particle(new THREE.Sprite(material), scene));
+        }
+
+        this.emit = function () {
+          this.members.forEach(function (m) {
+            m.init();
+          });
+        };
+      }
+
+      function ThreeScene() {
+        var self = this;
         this.container = document.getElementById('particles');
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 5000);
         this.scene = new THREE.Scene();
         this.renderer = new THREE.WebGLRenderer();
         this.windowHalfX = window.innerWidth / 2;
         this.windowHalfY = window.innerHeight / 2;
-        this.pool = [];
-        this.tick = 0;
 
-        function generateSprite() {
-          var canvas = document.createElement('canvas');
-          canvas.width = 50;
-          canvas.height = 50;
-          var context = canvas.getContext('2d');
-          var gradient = context.createRadialGradient(canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width / 2);
-          gradient.addColorStop(0, 'rgba(0,205,153,1)');
-          gradient.addColorStop(0.4, 'rgba(0,179,134,1)');
-          gradient.addColorStop(0.7, 'rgba(0,154,115,1)');
-          gradient.addColorStop(1, 'rgba(0,0,0,1');
-          context.fillStyle = gradient;
-          context.fillRect(0, 0, canvas.width, canvas.height);
-          return canvas;
-        }
-
-        this.material = new THREE.SpriteMaterial({
-          map: new THREE.CanvasTexture(generateSprite()),
-          blending: THREE.AdditiveBlending
-        });
-        this.Particle = function () {
-          return new THREE.Sprite(this.material);
-        };
-        for (var i = 0; i <= 200; i++) {
-          this.pool.push(this.Particle());
-        }
-      };
-
-      Particles.prototype.init = function () {
         this.camera.position.z = 1000;
         this.renderer.setClearColor(0x000000);
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.container.appendChild(this.renderer.domElement);
+
         window.addEventListener('resize', this.onWindowResize, false);
-      };
 
-      Particles.prototype.initParticle = function (particle, delay) {
-        var self = this;
-        var particle = this instanceof THREE.Sprite ? this : particle;
-        var delay = delay !== undefined ? delay : 0;
-        particle.position.set(0, 0, 0);
-        particle.scale.x = particle.scale.y = Math.random() * 32 + 60;
-        new TWEEN.Tween(particle)
-          .delay(delay)
-          .to({}, 1750)
-          .onComplete(function () {self.scene.remove(particle)})
-          .start();
-        new TWEEN.Tween(particle.position)
-          .delay(delay)
-          .to({
-            x: Math.random() * 4000 - 2000,
-            y: Math.random() * 2000 - 1000,
-            z: Math.random() * 4000 - 2000
-          }, 1750)
-          .start();
-        // new TWEEN.Tween(particle.scale)
-        //   .delay(delay)
-        //   .to({
-        //     x: 0.01,
-        //     y: 0.01
-        //   }, 1250)
-        //   .start();
-      };
-
-      Particles.prototype.render = function () {
-        TWEEN.update();
-        this.renderer.render(this.scene, this.camera);
-      };
-
-      Particles.prototype.animate = function () {
-        if (this.scene.children.length > 0) {
-          requestAnimationFrame(this.animate.bind(this));
-          this.render();
+        this.onWindowResize = function () {
+          this.windowHalfX = window.innerWidth / 2;
+          this.windowHalfY = window.innerHeight / 2;
+          self.camera.aspect = window.innerWidth / window.innerHeight;
+          this.camera.updateProjectionMatrix();
+          this.renderer.setSize(window.innerWidth, window.innerHeight);
         }
-      };
 
-      Particles.prototype.burst = function () {
-        if (this.tick === 200) {
-          this.tick = 0;
-        }
-        for (var i = 0; i < 50; i++) {
-          this.initParticle(this.pool[i + this.tick], i * 5);
-          this.scene.add(this.pool[i + this.tick]);
-        }
-        this.tick += 50;
-        this.animate();
-      };
-
-      Particles.prototype.onWindowResize = function () {
-        this.windowHalfX = window.innerWidth / 2;
-        this.windowHalfY = window.innerHeight / 2;
-        this.camera.aspect = window.innerWidth / window.innerHeight;
-        this.camera.updateProjectionMatrix();
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-      };
-      var thing = new Particles();
-      thing.init();
-
-      function divideTime(val) {
-        var min = 0;
-        var sec = 0;
-        function padZero(num) {
-          if (num.toString().length < 2) {
-            num = '0' + num.toString();
-          }
-          return num;
-        }
-        while (val >= 60) {
-          min += 1;
-          val -= 60;
-        }
-        sec = val;
-        $timer.text(padZero(min) + ':' + padZero(sec));
+        this.render = function () {
+          TWEEN.update();
+          this.renderer.render(this.scene, this.camera);
+        };
       }
 
-      function calcPoints(answer) {
-        var points = (answer === 'correct') ? 250 : -100;
-        $points.text(parseInt($points.text()) + points);
+      ThreeScene.prototype.animate = function () {
+        requestAnimationFrame(this.animate.bind(this));
+        this.render();
+      };
+
+      var onCorrectParticleEffect = new ThreeScene();
+      var onCorrectParticleBursts = [];
+      var currentBurst = 0;
+      for (var i = 0; i < 6; i++) {
+        onCorrectParticleBursts.push(new Burst(i, onCorrectParticleEffect.scene));
+      }
+      function burstAlternate() {
+        onCorrectParticleBursts[currentBurst].emit();
+        currentBurst++;
+        currentBurst = currentBurst > 5 ? 0 : currentBurst;
       }
 
-      var Game = new TypeSwitch({stubbornMode: true});
-      var elapsedTime = setInterval(function () {
-        divideTime(Game.getGameStats().time);
-      }, 1000);
-      var prompt = 'Green Balls Mothafucka!'
+      function verticalSlide(el, val) {
+        $(el).animate({
+          bottom: val
+        }, 1500);
+      }
 
-      function appendGamePrompt(newPrompt) {
-        newPrompt.split('').map(function (letter, i) {
-          var letterContainer = document.createElement('p');
-          if (letter === ' ') {
-            letter = 'W';
-            letterContainer.style.opacity = '0';
-          }
-          letterContainer.setAttribute('class', 'letter');
-          var node = document.createTextNode(letter);
-          letterContainer.appendChild(node);
-          return letterContainer;
-        }).forEach(function (node) {
-          document.getElementById('prompt').appendChild(node);
+      function shake(el) {
+        var $el = $(el);
+        $el.animate({
+          marginLeft: 50
+        }, 150, function () {
+          $el.animate({
+            marginLeft: 0
+          }, 550, 'easeOutBounce');
         });
       }
 
@@ -206,36 +182,23 @@
         }
       }
 
-      function loopFadeOut(el, val){
-        el.style.opacity = val;
-        (function fade() {
-          if ((el.style.opacity -= (val / 10)) < 0) {
-            el.style.opacity = val;
-          } else {
-            requestAnimationFrame(fade);
-          }
-        })();
-      }
-
-      function verticalSlide(el, val) {
-        $(el).animate({
-          bottom: val
-        }, 1500);
-      }
-
       function shiftPrompt() {
         var totalOffset = 0;
-        $('.done').each(function () {
+        var $done = $('.done');
+        var $active = $('.active');
+        $done.each(function () {
           totalOffset += $(this).width() - 1;
         });
-        totalOffset += $('.active').width() / 2;
+        totalOffset += $active.width() / 2;
         $prompt.css('transform', 'translateX(-' + totalOffset + 'px)');
       }
 
       $('#playButton').on('click', function () {
+          onCorrectParticleEffect.animate();
+          $points.text('0');
           Game.start(prompt);
           $prompt.html('');
-          appendGamePrompt(prompt);
+          functions.appendGamePrompt(prompt);
           setLetterColor();
           $prompt.fadeIn(2000);
           $message.css('animation', 'none').fadeOut(1000);
@@ -248,13 +211,16 @@
         var gameStats = Game.getGameStats();
         setLetterColor();
         shiftPrompt();
-        calcPoints('correct');
-        thing.burst();
+        functions.calcPoints('correct', $points);
+        burstAlternate();
       });
+
       Game.on('incorrect', function () {
-        // alertIncorrect();
-        calcPoints('incorrect');
+        functions.playSound(incorrectTone);
+        functions.calcPoints('incorrect', $points);
+        shake($('.active'));
       });
+
       Game.on('complete', function () {
         $message.html('').append('<p>GAME OVER</br>Points:</br>' + $points.text()+ '</br>Duration:</br>' + $timer.text() + '</br>Press the play button to try again</p>');
         $message.fadeIn(1500).css('animation', 'Pulse 1.5s linear infinite alternate');

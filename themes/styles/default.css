@@ -1,10 +1,10 @@
 @keyframes Pulse {
   0% {
-    opacity: .3; }
+    opacity: .4; }
   50% {
-    opacity: .5; }
+    opacity: .6; }
   100% {
-    opacity: .7; } }
+    opacity: .8; } }
 body {
   margin: 0;
   background-color: #000000; }
@@ -40,10 +40,11 @@ h2 {
   transform: translateY(-50%);
   background-color: #1a1a1a;
   text-align: center;
-  border: solid 5px #00b386;
+  border: solid 5px #00ceed;
   animation: Pulse 1.5s linear infinite alternate; }
   #message p {
-    font-size: 20px; }
+    font-size: 20px;
+    line-height: 50px; }
 
 #prompt {
   position: absolute;
@@ -62,7 +63,7 @@ h2 {
   position: absolute;
   right: 50%;
   transform: translateX(50%);
-  color: #00b386;
+  color: #00ceed;
   opacity: .8;
   bottom: -130px; }
 

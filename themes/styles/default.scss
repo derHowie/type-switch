@@ -2,12 +2,12 @@ $gray: #000000;
 $lighterGray: #1a1a1a;
 $lightestGray: #4d4d4d;
 $white: #FFFFFF;
-$seaFoam: #00b386;
+$seaFoam: #00ceed;
 
 @keyframes Pulse {
-  0% {opacity: .3}
-  50% {opacity: .5}
-  100% {opacity: .7}
+  0% {opacity: .4}
+  50% {opacity: .6}
+  100% {opacity: .8}
 }
 
 body {
@@ -54,6 +54,7 @@ h2 {
   animation: Pulse 1.5s linear infinite alternate;
   p {
     font-size: 20px;
+    line-height: 50px;
   }
 }
 
