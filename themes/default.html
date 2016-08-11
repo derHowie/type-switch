@@ -28,7 +28,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js" type="text/javascript"></script>
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-    <script src="../build/type-switch.min.js" type="text/javascript"></script>
+    <script src="../build/type-switch-web.min.js" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r77/three.min.js" type="text/javascript"></script>
     <script src="https://cdn.rawgit.com/sole/tween.js/master/src/Tween.js" type="text/javascript"></script>
     <script src="resources/default/functions.js" type="text/javascript"></script>
@@ -46,17 +46,17 @@
       var elapsedTime = setInterval(function () {
         functions.divideTime(Game.getGameStats().time, $timer);
       }, 1000);
-      var prompt = 'TypeSwitch is a javascript keypress event module, that makes tracking keystrokes a breeze!'
+      var prompt = 'TypeSwitch is a keypress event module, made to help you create typing games with ease!'
 
       function Particle(sprite, scene) {
         this.init = function () {
           sprite.position.set(0, 0, 0);
           sprite.scale.x = sprite.scale.y = Math.random() * 32 + 60;
           new TWEEN.Tween(sprite.position)
-            .to({
-              x: Math.random() * 8000 - 4000,
-              y: Math.random() * 8000 - 4000,
-              z: Math.random() * 8000 - 4000
+          .to({
+            x: Math.random() * 4000 - 2000,
+            y: Math.random() * 2000 - 1000,
+            z: Math.random() * 6000 - 3000
             }, 2750)
             .start();
           new TWEEN.Tween(sprite.scale)

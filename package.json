@@ -1,10 +1,10 @@
 {
-  "name": "typing-game-logic",
-  "version": "0.0.0",
-  "description": "My tiptop module",
+  "name": "type-switch",
+  "version": "0.0.9",
+  "description": "handles/tracks keypress events",
   "license": "MIT",
   "main": "lib/index.js",
-  "repository": "DerHowie/typing-game-logic",
+  "repository": "DerHowie/type-switch",
   "author": {
     "name": "Christopher Howard",
     "email": "derhowiedesigns@gmail.com",
@@ -15,12 +15,9 @@
   },
   "scripts": {
     "test": "xo && ava",
-    "build": "browserify lib/index.js -s TypeSwitch > build/type-switch.min.js -d",
+    "web-build": "browserify lib/index.js -s TypeSwitch > build/type-switch-web.min.js -d",
     "compile-sass": "sass default.scss default.css"
   },
-  "files": [
-    "build/type-switch.min.js"
-  ],
   "keywords": [
     ""
   ],
@@ -29,6 +26,7 @@
   },
   "devDependencies": {
     "ava": "^0.11.0",
+    "browserify": "^13.0.1",
     "xo": "^0.12.1"
   }
 }
