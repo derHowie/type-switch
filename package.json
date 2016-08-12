@@ -1,6 +1,6 @@
 {
   "name": "type-switch",
-  "version": "0.0.9",
+  "version": "1.0.0",
   "description": "handles/tracks keypress events",
   "license": "MIT",
   "main": "lib/index.js",
@@ -15,8 +15,7 @@
   },
   "scripts": {
     "test": "xo && ava",
-    "web-build": "browserify lib/index.js -s TypeSwitch > build/type-switch-web.min.js -d",
-    "compile-sass": "sass default.scss default.css"
+    "web-build": "browserify lib/index.js -s TypeSwitch > build/type-switch-web.min.js -d"
   },
   "keywords": [
     ""
