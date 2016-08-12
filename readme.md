@@ -2,16 +2,16 @@
 type-switch is a keypress event module that makes creating typing games a breeze. API documentation coming shortly.
 
 ## Installation
-``
+```
 npm install --save 'type-switch'
-``
+```
 
 ## Usage
-``
-var TypeSwitch from 'type-switch';
+```js
+var TypeSwitch = require('type-switch');
 
 var myTypeSwitch = new TypeSwitch();
-``
+```
 
 ## API
 
@@ -35,7 +35,7 @@ Default: `false`
 returns an object containing your instance's current game stats
 
 ##### example
-``
+```js
 observer.getGameStats();
 
 /*{
@@ -48,7 +48,7 @@ observer.getGameStats();
   result: 'correct',
   incorrectTotal: 2
   }*/
-``
+```
 
 This should all be pretty self-explanatory, however it's important to note that 'currentIndex' is not the index when the key was pressed, but rather the index of the prompt resulting from the last keystroke. So in the case above, the user was at prompt[4] when they typed the correct answer leading to a currentIndex of 5.
 
@@ -123,7 +123,7 @@ Type: `string`
 type-switch has 3 hooks by default: 'correct', 'incorrect', and 'complete'. Calling typeSwitch.getGameStats() within these hooks is a powerful way of monitoring the user's progress and running your own code in synchrony with each keypress.
 
 ##### example
-``
+```js
 var myTypeSwitch = new TypeSwitch();
 var points = 0;
 var failureMessage = 'Oh man! You stink! You should have typed ';
@@ -147,7 +147,7 @@ myTypeSwitch.on('complete', function() {
   alert(successMessage);
   partyTime();
 });
-``
+```
 
 ## License
 
