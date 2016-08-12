@@ -54,7 +54,7 @@ This should all be pretty self-explanatory, however it's important to note that 
 
 ### typeSwitch.start(prompt)
 
-begins game clock and accepts prompt for user to type
+begins game clock and accepts a prompt for the user to type
 
 #### prompt
 
@@ -67,6 +67,7 @@ changes the users position in the game prompt
 #### newIndex
 
 *Required*
+
 Type: `number`
 
 ### typeSwitch.changeTime(newTime)
@@ -76,6 +77,7 @@ changes the game time to provided value
 #### newTime
 
 *Required*
+
 Type: `number`
 
 ### typeSwitch.changePrompt(newPrompt)
@@ -85,6 +87,7 @@ used to change the user's prompt mid-game
 #### newPrompt
 
 *Required*
+
 Type: `string`
 
 ### typeSwitch.pauseGame()
@@ -118,6 +121,7 @@ type-switch is an EventEmitter. Use this method to create your own custom hooks.
 #### event
 
 *Required*
+
 Type: `string`
 
 type-switch has 3 hooks by default: 'correct', 'incorrect', and 'complete'. Calling typeSwitch.getGameStats() within these hooks is a powerful way of monitoring the user's progress and running your own code in synchrony with each keypress.
