@@ -36,7 +36,7 @@ returns an object containing your instance's current game stats
 
 ##### example
 ```js
-observer.getGameStats();
+myTypeSwitch.getGameStats();
 
 /*{
   prompt: 'Hey Mr. User, type this prompt!',
