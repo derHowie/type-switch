@@ -1,5 +1,5 @@
 # type-switch
-type-switch is a keypress event module that makes creating typing games a breeze. API documentation coming shortly.
+A portable signal engine used to power games and interactive experiences with keypress events.
 
 ## Installation
 ```
