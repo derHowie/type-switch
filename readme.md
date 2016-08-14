@@ -34,7 +34,6 @@ Default: `false`
 
 returns an object containing your instance's current game stats
 
-##### example
 ```js
 myTypeSwitch.getGameStats();
 
@@ -49,8 +48,37 @@ myTypeSwitch.getGameStats();
   incorrectTotal: 2
   }*/
 ```
+##### prompt
 
-This should all be pretty self-explanatory, however it's important to note that 'currentIndex' is not the index when the key was pressed, but rather the index of the prompt resulting from the last keystroke. So in the case above, the user was at prompt[4] when they typed the correct answer leading to a currentIndex of 5.
+the string supplied to your type-switch instance via typeSwitch.start() or typeSwitch.changePrompt
+
+##### time
+
+the time elapsed since typeSwitch.start() was called, unless it has been changed manually with typeSwitch.changeTime()
+
+##### paused
+
+if false, time is not incrementing and your instance is not listening for the keypress events
+
+##### currentIndex
+
+This is not the index when the key was pressed, but rather the index of the prompt resulting from the last keystroke. So in the case above, the user was at prompt[4] when they typed the correct answer leading to a currentIndex of 5.
+
+##### lastExpectedInput
+
+the correct answer
+
+##### lastUserInput
+
+the user's last answer
+
+##### result
+
+this provides a string describing the result of the last keypress
+
+##### incorrectTotal
+
+the number of incorrect keystrokes since typeSwitch.start() was called
 
 ### typeSwitch.start(prompt)
 
@@ -126,7 +154,6 @@ Type: `string`
 
 type-switch has 3 hooks by default: 'correct', 'incorrect', and 'complete'. Calling typeSwitch.getGameStats() within these hooks is a powerful way of monitoring the user's progress and running your own code in synchrony with each keypress.
 
-##### example
 ```js
 var myTypeSwitch = new TypeSwitch();
 var points = 0;
