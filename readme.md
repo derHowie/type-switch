@@ -1,6 +1,8 @@
 # type-switch
 A portable signal engine used to power games and interactive experiences with keypress events.
 
+See an example [here](https://derhowie.github.io/type-switch-default)
+
 ## Installation
 ```
 npm install --save 'type-switch'
